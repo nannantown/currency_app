@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:currency_app/pages/index.dart';
@@ -40,7 +41,6 @@ class FormScale extends StatelessWidget {
                       color: Colors.pinkAccent,
                     )),
               ),
-              textInputAction: TextInputAction.next,
               validator: (value) {
                 if (value.isEmpty) {
                   return 'Please provide a value.';
