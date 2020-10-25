@@ -9,8 +9,8 @@ class FormScale extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final viewModel = _ViewModel.fromStateNotifier(context);
-    final _priceFocusNode = FocusNode();
     final _form = GlobalKey<FormState>();
+    final _priceFocusNode = FocusNode();
     String _title;
     int _price;
 
@@ -84,6 +84,7 @@ class FormScale extends StatelessWidget {
                       color: Colors.pinkAccent,
                     )),
               ),
+              textInputAction: TextInputAction.done,
               focusNode: _priceFocusNode,
               validator: (value) {
                 if (value.isEmpty) {
