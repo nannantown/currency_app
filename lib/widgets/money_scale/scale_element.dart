@@ -10,9 +10,9 @@ class ScaleElement extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final viewModel = _ViewModel.fromStateNotifier(context);
+    final notifier = context.watch<MoneyScalePageStateNotifier>();
     return InkWell(
-      onTap: () => viewModel.delete(scale),
+      onTap: () => notifier.delete(scale),
       child: Card(
         child: Padding(
           padding: const EdgeInsets.all(20),
@@ -74,16 +74,4 @@ class ScaleElement extends StatelessWidget {
       ),
     );
   }
-}
-
-class _ViewModel {
-  _ViewModel({
-    @required this.delete,
-  });
-
-  _ViewModel.fromStateNotifier(BuildContext context)
-      : delete = context
-            .select((MoneyScalePageStateNotifier notifier) => notifier.delete);
-
-  final void Function(Scale) delete;
 }

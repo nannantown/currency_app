@@ -17,9 +17,9 @@ class MoneyScalePage extends StatelessWidget {
         StateNotifierProvider<SelectedChoiceNotifier, SelectedChoiceState>(
           create: (_) => SelectedChoiceNotifier(),
         ),
-//        StateNotifierProvider<ScaleFormNotifier, ScaleFormState>(
-//          create: (_) => ScaleFormNotifier(),
-//        ),
+        StateNotifierProvider<FormScaleNotifier, FormScaleState>(
+          create: (_) => FormScaleNotifier(),
+        ),
       ],
       child: MaterialApp(
         //Put Material App for BottomSheet
@@ -35,7 +35,7 @@ class MoneyScalePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final viewModel = _ViewModel.fromStateNotifier(context);
+    final state = context.watch<MoneyScalePageState>();
 
     return Scaffold(
       appBar: AppBar(
@@ -44,7 +44,7 @@ class MoneyScalePage extends StatelessWidget {
       ),
       backgroundColor: Theme.of(context).primaryColor,
       body: ScaleListView(
-        scales: viewModel.scales,
+        scales: state.scales,
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
@@ -77,19 +77,4 @@ class ScaleListView extends StatelessWidget {
           return ScaleElement(scale: scale);
         });
   }
-}
-
-class _ViewModel {
-  _ViewModel({
-    @required this.scales,
-    @required this.add,
-  });
-
-  _ViewModel.fromStateNotifier(BuildContext context)
-      : scales = context.select((MoneyScalePageState state) => state.scales),
-        add = context
-            .select((MoneyScalePageStateNotifier notifier) => notifier.add);
-
-  final List<Scale> scales;
-  final void Function(Scale) add;
 }

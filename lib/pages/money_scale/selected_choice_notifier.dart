@@ -7,9 +7,10 @@ export 'selected_choice_state.dart';
 
 class SelectedChoiceNotifier extends StateNotifier<SelectedChoiceState> {
   SelectedChoiceNotifier() : super(SelectedChoiceState());
-  void setSelectedChoice(ScaleCategory selectedChoice) {
+
+  void setSelectedChoice(ScaleCategory category) {
     state = state.copyWith(
-      selectedChoice: selectedChoice,
+      selectedChoice: category,
     );
   }
 }

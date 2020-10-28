@@ -1,3 +1,4 @@
+import 'package:currency_app/pages/money_scale/form_scale_notifier.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -7,13 +8,15 @@ import 'package:currency_app/widgets/index.dart';
 import 'package:provider/provider.dart';
 
 class FormScale extends StatelessWidget {
+  final _form = GlobalKey<FormState>();
+  final _priceFocusNode = FocusNode();
+
   @override
   Widget build(BuildContext context) {
-    final viewModel = _ViewModel.fromStateNotifier(context);
-    final _form = GlobalKey<FormState>();
-    final _priceFocusNode = FocusNode();
-    String _title;
-    int _price;
+    final notifier = context.watch<MoneyScalePageStateNotifier>();
+    final formNotifier = context.watch<FormScaleNotifier>();
+    final formState = context.watch<FormScaleState>();
+    final selectedState = context.watch<SelectedChoiceState>();
 
     return Form(
       key: _form,
@@ -22,6 +25,7 @@ class FormScale extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
+            Text(formState.title),
             TextFormField(
               style: const TextStyle(
                 color: Colors.white,
@@ -54,7 +58,7 @@ class FormScale extends StatelessWidget {
                 FocusScope.of(context).requestFocus(_priceFocusNode);
               },
               onSaved: (value) {
-                _title = value;
+                formNotifier.setTitle(value);
               },
             ),
             const SizedBox(
@@ -93,7 +97,7 @@ class FormScale extends StatelessWidget {
                 return null;
               },
               onSaved: (value) {
-                _price = int.tryParse(value);
+                formNotifier.setPrice(value);
               },
             ),
             const SizedBox(
@@ -103,61 +107,40 @@ class FormScale extends StatelessWidget {
             const SizedBox(
               height: 10,
             ),
-            Builder(builder: (BuildContext context) {
-              //ここだけリビルド
-              final state = context.select((SelectedChoiceState selectedChoice) => selectedChoice);
-              return FlatButton(
-                child: const Padding(
-                  padding: EdgeInsets.all(16),
-                  child: Text(
-                    'Save',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 20,
-                    ),
+            FlatButton(
+              child: const Padding(
+                padding: EdgeInsets.all(16),
+                child: Text(
+                  'Save',
+                  style: TextStyle(
+                    fontSize: 20,
+                    color: Colors.white,
                   ),
                 ),
-                color: const Color(0xffE1B031),
-                onPressed: () {
-                  if (!_form.currentState.validate()) {
-                    return;
-                  }
-                  _form.currentState.save();
-                  viewModel.add(
-                    Scale(
-                      id: 1,
-                      iconName: state
-                          .selectedChoice
-                          .iconName,
-                      color: state
-                          .selectedChoice
-                          .color,
-                      title: _title,
-                      price: _price,
-                      categoryName: state
-                          .selectedChoice
-                          .name,
-                      anotherPrice: _price / 123,
-                    ),
-                  );
-                  Navigator.pop(context);
-                },
-              );
-            }),
+              ),
+              color: const Color(0xffE1B031),
+              onPressed: () {
+                if (!_form.currentState.validate()) {
+                  return;
+                }
+                _form.currentState.save();
+                notifier.add(
+                  Scale(
+                    id: 1,
+                    iconName: selectedState.selectedChoice.iconName,
+                    color: selectedState.selectedChoice.color,
+                    title: 'テスト',
+                    price: 123,
+                    categoryName: selectedState.selectedChoice.name,
+                    anotherPrice: 133 / 123,
+                  ),
+                );
+                Navigator.pop(context);
+              },
+            ),
           ],
         ),
       ),
     );
   }
-}
-
-class _ViewModel {
-  _ViewModel({
-    @required this.add,
-  });
-
-  _ViewModel.fromStateNotifier(BuildContext context)
-      : add = context
-            .select((MoneyScalePageStateNotifier notifier) => notifier.add);
-  final void Function(Scale) add;
 }
