@@ -5,14 +5,20 @@ import 'package:currency_app/model/index.dart';
 import 'package:currency_app/widgets/index.dart';
 import 'package:provider/provider.dart';
 
-class FormScale extends StatelessWidget {
+
+class FormScale extends StatefulWidget {
+  @override
+  _FormScaleState createState() => _FormScaleState();
+}
+class _FormScaleState extends State<FormScale> {
+  final GlobalKey<FormState> _form = GlobalKey<FormState>();
+  final FocusNode _priceFocusNode = FocusNode();
+  String _title;
+  int _price;
+
   @override
   Widget build(BuildContext context) {
     final viewModel = _ViewModel.fromStateNotifier(context);
-    final _priceFocusNode = FocusNode();
-    final _form = GlobalKey<FormState>();
-    String _title;
-    int _price;
 
     return Form(
       key: _form,
